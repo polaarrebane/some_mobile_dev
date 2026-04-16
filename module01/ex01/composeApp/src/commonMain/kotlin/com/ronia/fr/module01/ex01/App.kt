@@ -1,0 +1,258 @@
+package com.ronia.fr.module01.ex01
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarDefaults
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import module01_ex01.composeapp.generated.resources.Res
+import module01_ex01.composeapp.generated.resources.calendar3_event
+import module01_ex01.composeapp.generated.resources.calendar3_week
+import module01_ex01.composeapp.generated.resources.location
+import module01_ex01.composeapp.generated.resources.location_off
+import module01_ex01.composeapp.generated.resources.time_and_weather
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
+
+enum class Destination(
+    val route: String,
+    val label: String,
+    val icon: DrawableResource,
+    val contentDescription: String
+) {
+    CURRENTLY("currently", "Currently", Res.drawable.time_and_weather, "Currently"),
+    TODAY("today", "Today", Res.drawable.calendar3_event, "Today"),
+    WEEKLY("weekly", "Weekly", Res.drawable.calendar3_week, "Weekly"),
+}
+
+@Composable
+fun GeoText(s: String) {
+    Text(s, fontSize = 32.sp, fontWeight = FontWeight.Bold)
+}
+
+@Composable
+fun CurrentlyScreen(
+    location: String = "",
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column (horizontalAlignment = Alignment.CenterHorizontally) {
+            GeoText("Currently")
+            GeoText(location)
+        }
+    }
+}
+
+@Composable
+fun TodayScreen(
+    location: String = "",
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column (horizontalAlignment = Alignment.CenterHorizontally) {
+            GeoText("Today")
+            GeoText(location)
+        }
+    }
+}
+
+@Composable
+fun WeeklyScreen(
+    location: String = "",
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column (horizontalAlignment = Alignment.CenterHorizontally){
+            GeoText("Weekly")
+            GeoText(location)
+        }
+    }
+}
+
+@Composable
+fun AppNavHost(
+    navController: NavHostController,
+    startDestination: Destination,
+    modifier: Modifier = Modifier,
+    location: String = ""
+) {
+    NavHost(
+        navController,
+        startDestination = startDestination.route
+    ) {
+        Destination.entries.forEach { destination ->
+            composable(destination.route) {
+                when (destination) {
+                    Destination.TODAY -> TodayScreen(location)
+                    Destination.CURRENTLY -> CurrentlyScreen(location)
+                    Destination.WEEKLY -> WeeklyScreen(location)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun SearchLocationField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    enabled: Boolean
+) {
+    TextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(end = 16.dp),
+        placeholder = { Text("Search location...") },
+        singleLine = true,
+        enabled = enabled,
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            disabledContainerColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+        ),
+        shape = RoundedCornerShape(8.dp)
+    )
+}
+
+@Composable
+fun GeolocationButton(
+    onClick: () -> Unit,
+    isGeolocationActive: Boolean
+) {
+    IconButton(onClick = onClick) {
+        Icon(
+            painter = painterResource(
+                if (isGeolocationActive) {
+                    Res.drawable.location_off
+                } else {
+                    Res.drawable.location
+                }
+            ),
+            contentDescription = "Geolocation Icon",
+            tint = MaterialTheme.colorScheme.onPrimaryContainer
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MainScreen() {
+    val navController = rememberNavController()
+    val startDestination = Destination.CURRENTLY
+    var selectedDestination by rememberSaveable { mutableIntStateOf(startDestination.ordinal) }
+
+    var searchQuery by rememberSaveable { mutableStateOf("") }
+    var isGeolocationActive by rememberSaveable { mutableStateOf(false) }
+    val location by remember {
+        derivedStateOf { if (isGeolocationActive) "Geolocation" else searchQuery }
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                ),
+                title = {
+                    SearchLocationField(
+                        value = searchQuery,
+                        onValueChange = { searchQuery = it },
+                        enabled = !isGeolocationActive
+                    )
+                },
+                actions = {
+                    GeolocationButton(
+                        onClick = { isGeolocationActive = !isGeolocationActive },
+                        isGeolocationActive = isGeolocationActive
+                    )
+                }
+            )
+        },
+        bottomBar = {
+            NavigationBar(windowInsets = NavigationBarDefaults.windowInsets) {
+                Destination.entries.forEachIndexed { index, destination ->
+                    NavigationBarItem(
+                        selected = selectedDestination == index,
+                        onClick = {
+                            navController.navigate(destination.route)
+                            selectedDestination = index
+                        },
+                        icon = {
+                            Icon(
+                                painter = painterResource(destination.icon),
+                                contentDescription = destination.contentDescription,
+                                modifier = Modifier.size(30.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        },
+                        label = { Text(destination.label) }
+                    )
+                }
+            }
+        },
+    ) { paddingValues ->
+        AppNavHost(
+            navController,
+            startDestination,
+            modifier = Modifier.padding(paddingValues),
+            location = location
+        )
+    }
+}
+
+
+@Composable
+@Preview
+fun App() {
+    MaterialTheme {
+        MainScreen()
+    }
+}

@@ -37,3 +37,8 @@ since the old icon library, Material Icon, is no longer supported. The build too
 
 Deployed project: [https://mobile-piscine.ronia.org/module01/ex00/](https://mobile-piscine.ronia.org/module01/ex00/)  
 It's extremely slow.
+
+## ex01
+[ex01 - single file](module01/ex01/composeApp/src/commonMain/kotlin/com/ronia/fr/module01/ex01/App.kt)  
+Deployed project: [https://mobile-piscine.ronia.org/module01/ex01/](https://mobile-piscine.ronia.org/module01/ex01/)  
+It's extremely slow.
