@@ -26,7 +26,7 @@ The fully functional calculator is ex03.
 # Module01
 
 ## ex00 
-[ex00 - single file](module00/Module01_ex00/composeApp/src/commonMain/kotlin/com/ronia/fr/module01/ex00/App.kt)  
+[ex00 - single file](module01/ex00/composeApp/src/commonMain/kotlin/com/ronia/fr/module01/ex00/App.kt)  
 
 For navigation, the ['Navigation bar'](https://developer.android.com/develop/ui/compose/components/navigation-bar) component is used. 
 For some reason, it was necessary to manually add a line ``implementation(libs.navigation.compose)`` to the file 
