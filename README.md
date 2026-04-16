@@ -34,3 +34,6 @@ module00/Module01_ex00/composeApp/build.gradle.kts (section commonMain.dependenc
 
 The icons were downloaded from the website https://composables.com/icons in XML format to the composeResources/drawable directory,
 since the old icon library, Material Icon, is no longer supported. The build tool should automatically add these icons to Res.drawable.
+
+Deployed project: [https://mobile-piscine.ronia.org/module01/ex00/](https://mobile-piscine.ronia.org/module01/ex00/)  
+It's extremely slow.
