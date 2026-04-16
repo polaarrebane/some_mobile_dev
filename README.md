@@ -1,5 +1,8 @@
 # Module00  
 
+ex00 – ex03 are implemented as separate projects. In Android Studio, each folder must be opened **individually**. It is not possible to open the entire module00 at once, sorry.  
+The fully functional calculator is ex03.  
+
 * [ex00 - single file](module00/ex00/composeApp/src/commonMain/kotlin/com/ronia/fr/ex00/App.kt)  
 * [ex01 - single file](module00/ex01/composeApp/src/commonMain/kotlin/com/ronia/fr/module00/ex01/App.kt)  
 * [ex02 - single file](module00/ex02/composeApp/src/commonMain/kotlin/com/ronia/fr/module00/module00_ex02/App.kt)  
