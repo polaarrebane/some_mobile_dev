@@ -21,3 +21,16 @@ The fully functional calculator is ex03.
 
 ![Calculator app](screenshots/Screenshot_20260416_045054.png "Calculator app")
 
+
+
+# Module01
+
+## ex00 
+[ex00 - single file](module00/Module01_ex00/composeApp/src/commonMain/kotlin/com/ronia/fr/module01/ex00/App.kt)  
+
+For navigation, the ['Navigation bar'](https://developer.android.com/develop/ui/compose/components/navigation-bar) component is used. 
+For some reason, it was necessary to manually add a line ``implementation(libs.navigation.compose)`` to the file 
+module00/Module01_ex00/composeApp/build.gradle.kts (section commonMain.dependencies).  
+
+The icons were downloaded from the website https://composables.com/icons in XML format to the composeResources/drawable directory,
+since the old icon library, Material Icon, is no longer supported. The build tool should automatically add these icons to Res.drawable.
